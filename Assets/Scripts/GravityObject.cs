@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GravityObject : MonoBehaviour
 {
-    public readonly static float GravityStrength = 1.0f;
+    public readonly static float GravityStrength = 2.0f;
 
     public static List<GravityObject> Objects = new();
     [HideInInspector]
@@ -54,8 +54,11 @@ public class GravityObject : MonoBehaviour
         Color oldColor = Gizmos.color;
         if (rb != null)
         {
+            Vector2 strongestGravityVelocity = new(0.0f, 0.0f);
+            if (StrongestObject != null)
+                strongestGravityVelocity = StrongestObject.rb.velocity;
             Gizmos.color = Color.green;
-            Gizmos.DrawRay(transform.position, rb.velocity);
+            Gizmos.DrawRay(transform.position, rb.velocity - strongestGravityVelocity);
         }
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position, 0.5f * transform.localScale.y * transform.up);

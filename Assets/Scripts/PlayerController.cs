@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
         var toStrongest = go.StrongestObject.transform.position - transform.position;
         var distance = toStrongest.magnitude;
-        camera.orthographicSize = distance * 2.0f;
+        camera.orthographicSize = distance * 2.5f;
         camera.transform.up = -toStrongest;
     }
 
