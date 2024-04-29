@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
     public float RotateForce = 0.5f;
     public float JumpForce = 0.5f;
 
-    private Rigidbody2D rb = null;
+    private GravityObject go = null;
     private float rotation = 0.0f;
     private bool onGround = false;
     private Vector2 jumpDirection = new(0.0f, 0.0f);
@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 
     public void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        go = GetComponent<GravityObject>();
     }
 
     public void Update()
@@ -30,42 +30,21 @@ public class PlayerController : MonoBehaviour
 
         camera.transform.position = new(transform.position.x, transform.position.y, -10.0f);
 
-        GravityObject nearestObject = null;
-        foreach (var obj in GravityObject.Objects)
-        {
-            if (obj.gameObject != gameObject)
-            {
-                if (nearestObject == null)
-                {
-                    nearestObject = obj;
-                    continue;
-                }
-
-                var newGravity = obj.rb.mass / (obj.transform.position - transform.position).sqrMagnitude;
-                var currentGravity = nearestObject.rb.mass / (nearestObject.transform.position - transform.position).sqrMagnitude;
-                if (newGravity > currentGravity)
-                    nearestObject = obj;
-            }
-        }
-
-        if (nearestObject == null)
-            return;
-
-        var toNearest = nearestObject.transform.position - transform.position;
-        var distance = toNearest.magnitude;
+        var toStrongest = go.StrongestObject.transform.position - transform.position;
+        var distance = toStrongest.magnitude;
         camera.orthographicSize = distance * 2.0f;
-        camera.transform.up = -toNearest;
+        camera.transform.up = -toStrongest;
     }
 
     public void FixedUpdate()
     {
-        rb.AddTorque(rotation * RotateForce);
+        go.rb.AddTorque(rotation * RotateForce);
 
         if (shouldJump)
         {
             shouldJump = false;
             if (jumpDirection.sqrMagnitude > 0.0)
-                rb.AddForce(jumpDirection.normalized * JumpForce, ForceMode2D.Impulse);
+                go.rb.AddForce(jumpDirection.normalized * JumpForce, ForceMode2D.Impulse);
         }
     }
 
@@ -76,7 +55,7 @@ public class PlayerController : MonoBehaviour
         for (var i = 0; i < collision.contactCount; i++)
         {
             var contact = collision.GetContact(i);
-            if (contact.otherRigidbody == rb)
+            if (contact.otherRigidbody == go.rb)
                 jumpDirection += contact.normal;
             else
                 jumpDirection -= contact.normal;
