@@ -18,7 +18,7 @@ public class SetupOrbit : MonoBehaviour
             (distance * (ThingToOrbitAround.rb.mass + rb.mass))
         );
         var otherOrbitVelocity = -direction * Mathf.Sqrt(
-            GravityObject.GravityStrength * rb.mass * ThingToOrbitAround.rb.mass /
+            GravityObject.GravityStrength * rb.mass * rb.mass /
             (distance * (ThingToOrbitAround.rb.mass + rb.mass))
         );
 
