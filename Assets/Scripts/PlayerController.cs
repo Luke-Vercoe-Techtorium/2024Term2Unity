@@ -50,30 +50,17 @@ public class PlayerController : MonoBehaviour
 
         if (shouldJump && onGround)
         {
-            onGround = false;
             if (jumpDirection.sqrMagnitude > 0.0)
                 go.rb.AddForce(jumpDirection.normalized * JumpForce, ForceMode2D.Impulse);
         }
         shouldJump = false;
-    }
-
-    public void OnCollisionEnter2D(Collision2D collision)
-    {
-        onGround = true;
-        for (var i = 0; i < collision.contactCount; i++)
-        {
-            var contact = collision.GetContact(i);
-            if (contact.otherRigidbody == go.rb)
-                jumpDirection += contact.normal;
-            else
-                jumpDirection -= contact.normal;
-        }
+        onGround = false;
+        jumpDirection = new(0.0f, 0.0f);
     }
 
     public void OnCollisionStay2D(Collision2D collision)
     {
         onGround = true;
-        jumpDirection = new(0.0f, 0.0f);
         for (var i = 0; i < collision.contactCount; i++)
         {
             var contact = collision.GetContact(i);
