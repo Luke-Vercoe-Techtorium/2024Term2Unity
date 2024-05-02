@@ -852,7 +852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RotateForce: 2
-  JumpForce: 3
+  JumpForce: 2
 --- !u!58 &2127126403
 CircleCollider2D:
   m_ObjectHideFlags: 0

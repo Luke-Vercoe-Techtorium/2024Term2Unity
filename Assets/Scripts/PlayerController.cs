@@ -22,9 +22,8 @@ public class PlayerController : MonoBehaviour
         var counterClockwise = Input.GetKey(KeyCode.D) ? -1.0f : 0.0f;
         rotation = clockwise + counterClockwise;
 
-        if (onGround && Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
             shouldJump = true;
-        onGround = false;
 
         var camera = Camera.main;
 
@@ -49,11 +48,25 @@ public class PlayerController : MonoBehaviour
     {
         go.rb.AddTorque(rotation * RotateForce);
 
-        if (shouldJump)
+        if (shouldJump && onGround)
         {
-            shouldJump = false;
+            onGround = false;
             if (jumpDirection.sqrMagnitude > 0.0)
                 go.rb.AddForce(jumpDirection.normalized * JumpForce, ForceMode2D.Impulse);
+        }
+        shouldJump = false;
+    }
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        onGround = true;
+        for (var i = 0; i < collision.contactCount; i++)
+        {
+            var contact = collision.GetContact(i);
+            if (contact.otherRigidbody == go.rb)
+                jumpDirection += contact.normal;
+            else
+                jumpDirection -= contact.normal;
         }
     }
 
