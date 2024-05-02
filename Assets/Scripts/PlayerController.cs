@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
             Mathf.MoveTowards(camera.orthographicSize, distance * 2.5f, 10.0f * Time.deltaTime);
         camera.transform.SetPositionAndRotation(
             new(transform.position.x, transform.position.y, -10.0f),
-    Quaternion.RotateTowards(
+            Quaternion.RotateTowards(
                 camera.transform.rotation,
                 Quaternion.FromToRotation(Vector3.up, -toStrongest),
                 180.0f * Time.deltaTime
