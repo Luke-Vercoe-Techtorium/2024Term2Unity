@@ -28,12 +28,21 @@ public class PlayerController : MonoBehaviour
 
         var camera = Camera.main;
 
-        camera.transform.position = new(transform.position.x, transform.position.y, -10.0f);
-
         var toStrongest = go.StrongestObject.transform.position - transform.position;
+        toStrongest.z = 0.0f;
+
         var distance = toStrongest.magnitude;
-        camera.orthographicSize = distance * 2.5f;
-        camera.transform.up = -toStrongest;
+
+        camera.orthographicSize =
+            Mathf.MoveTowards(camera.orthographicSize, distance * 2.5f, 10.0f * Time.deltaTime);
+        camera.transform.SetPositionAndRotation(
+            new(transform.position.x, transform.position.y, -10.0f),
+    Quaternion.RotateTowards(
+                camera.transform.rotation,
+                Quaternion.FromToRotation(Vector3.up, -toStrongest),
+                180.0f * Time.deltaTime
+            )
+        );
     }
 
     public void FixedUpdate()
