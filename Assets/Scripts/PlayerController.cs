@@ -48,11 +48,9 @@ public class PlayerController : MonoBehaviour
     {
         go.rb.AddTorque(rotation * RotateForce);
 
-        if (shouldJump && onGround)
-        {
-            if (jumpDirection.sqrMagnitude > 0.0)
-                go.rb.AddForce(jumpDirection.normalized * JumpForce, ForceMode2D.Impulse);
-        }
+        if (shouldJump && onGround && jumpDirection.sqrMagnitude > 0.0)
+            go.rb.AddForce(jumpDirection.normalized * JumpForce, ForceMode2D.Impulse);
+
         shouldJump = false;
         onGround = false;
         jumpDirection = new(0.0f, 0.0f);
