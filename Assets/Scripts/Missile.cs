@@ -2,23 +2,29 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
-    public GameObject Player = null;
+    public GravityObject Player = null;
     public float Speed = 10.0f;
 
     public void FixedUpdate()
     {
-        var toPlayer = Player.transform.position - transform.position;
-        toPlayer.z = 0.0f;
+        var aimPoint = Player.transform.position;
+        for (var i = 0; i < 20; i++)
+        {
+            var distance = (aimPoint - transform.position).magnitude;
+            var time = distance / Speed;
+            aimPoint = (Vector2)Player.transform.position + Player.rb.velocity * time;
+        }
 
+        var aimDirection = aimPoint - transform.position;
         transform.SetPositionAndRotation(
             transform.position + Speed * Time.fixedDeltaTime * transform.up,
             Quaternion.RotateTowards(
                 transform.rotation,
                 Quaternion.FromToRotation(
-                    transform.up,
-                    toPlayer.normalized
+                    Vector2.up,
+                    aimDirection.normalized
                 ),
-                90.0f * Time.fixedDeltaTime
+                180.0f * Time.fixedDeltaTime
             )
         );
     }

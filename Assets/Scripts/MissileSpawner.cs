@@ -14,7 +14,7 @@ public class MissileSpawner : MonoBehaviour
             var spawnOffset = Random.insideUnitCircle.normalized * SpawnRadius;
             var rotation = Quaternion.FromToRotation(Vector2.up, Random.insideUnitCircle.normalized);
             var missile = Instantiate(MissilePrefab, spawnOffset, rotation);
-            missile.Player = gameObject;
+            missile.Player = gameObject.GetComponent<GravityObject>();
         }
     }
 }
